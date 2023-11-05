@@ -1,0 +1,40 @@
+<?php
+// MySQL database connection settings
+$dbHost = 'MYSQL SERVER;
+$dbName = 'MYSQL DATABASE';
+$dbUsername = 'MYSQL USERNAME';
+$dbPassword = 'MYSQL PASSWORD';
+
+// Get the game_id from the query string
+$gameId = $_GET['game_id'];
+
+// Create a PDO connection to the database
+try {
+    $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUsername, $dbPassword);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// Query the database to retrieve all records
+$stmt = $pdo->prepare("SELECT code, value, redeem_amount FROM codes WHERE game_id = :gameId");
+$stmt->bindParam(':gameId', $gameId);
+$stmt->execute();
+
+// Fetch all the results
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($results) {
+    // Records found
+    $response = $results;
+} else {
+    // No records found
+    $response = array('error' => 'No records found');
+}
+
+// Return the response as JSON
+header('Content-Type: application/json');
+echo json_encode($response);
+
+// Close the database connection
+$pdo = null;
+?>

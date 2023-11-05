@@ -6,6 +6,10 @@ $dbUsername = 'MYSQL USER';
 $dbPassword = 'MYSQL PASSWORD';
 
 // Get the game_id and codename from the query string
+if(!isset($_GET['game_id']) || !isset($_GET['codename']){
+   header("HTTP/1.0 404 Not Found");
+   die();
+}
 $gameId = $_GET['game_id'];
 $codename = $_GET['codename'];
 
